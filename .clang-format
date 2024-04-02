@@ -1,0 +1,192 @@
+# In case you want to apply clang-format to all files in a directory recursively, you can use the following command:
+# find . -iname "*.cpp" -o -iname "*.h" -print0 | xargs -0 clang-format -i
+
+# LLVM, Google, Chromium, Mozilla, WebKit, Microsoft, GNU
+BasedOnStyle: LLVM
+
+Language: Cpp
+ColumnLimit: 90
+
+MaxEmptyLinesToKeep: 1
+
+
+# Alignment
+PointerAlignment: Left
+ReferenceAlignment: Left
+AlignConsecutiveDeclarations: Consecutive 
+AlignConsecutiveMacros: Consecutive
+# AlignConsecutiveShortCaseStatements: true
+AlignEscapedNewlines: Right
+AlignOperands: AlignAfterOperator
+AlignConsecutiveBitFields: Consecutive
+
+IndentPPDirectives: BeforeHash
+IndentRequiresClause: true
+BreakInheritanceList: BeforeComma
+ContinuationIndentWidth: 4
+
+RequiresExpressionIndentation: OuterScope
+
+CompactNamespaces: false
+
+# QualifierAlignment: Right
+IndentWidth: 4
+AccessModifierOffset: -4
+IndentAccessModifiers: false
+IndentCaseBlocks: false
+IndentCaseLabels: true
+IndentGotoLabels: true
+
+# IndentRequiresClause: true
+
+EmptyLineAfterAccessModifier: Never
+EmptyLineBeforeAccessModifier: Always
+
+# Short lines
+AllowShortEnumsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Always
+AllowShortCaseLabelsOnASingleLine: true # Maybe `false`?
+AllowShortFunctionsOnASingleLine: All # Maybe `Empty`?
+AllowShortLambdasOnASingleLine: All
+AllowShortLoopsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+
+Standard: c++20 # Maybe `Latest`?
+
+SpacesInSquareBrackets: false
+
+InsertBraces: true
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterControlStatement: MultiLine
+
+
+
+FixNamespaceComments: true
+AllowAllParametersOfDeclarationOnNextLine: false
+
+BinPackParameters: false
+BinPackArguments: false
+
+
+
+
+# IncludeCategories:
+#  - Regex: '.*'
+#    Priority: 1
+#    SortPriority: 10
+
+# IncludeBlocks: Preserve
+
+SortIncludes: false
+
+# Template Stuff
+AlwaysBreakTemplateDeclarations: Yes
+SpaceAfterTemplateKeyword: false
+
+BreakBeforeConceptDeclarations: true
+BreakBeforeTernaryOperators: true
+
+
+AlignAfterOpenBracket: BlockIndent
+AlignArrayOfStructures: Right
+
+
+BreakConstructorInitializers: BeforeComma
+
+RequiresClausePosition: OwnLine
+RemoveBracesLLVM: false
+RemoveSemicolon: true # Maybe `false`?
+SeparateDefinitionBlocks: Always
+BreakBeforeBraces: Attach
+
+## This is from https://gist.github.com/YodaEmbedding/c2c77dc693d11f3734d78489f9a6eea4 with some modifications
+## The goal is to be as close as possible to Rust standard formatter.
+
+# AccessModifierOffset: -4
+# AlignAfterOpenBracket: BlockIndent    # New in v14. For earlier clang-format versions, use AlwaysBreak instead.
+# AlignConsecutiveMacros: false
+# AlignConsecutiveAssignments: false
+# AlignConsecutiveDeclarations: false
+# AlignEscapedNewlines: DontAlign
+# AlignOperands: false
+# AlignTrailingComments: false
+# AllowAllArgumentsOnNextLine: false
+# AllowAllConstructorInitializersOnNextLine: false
+# AllowAllParametersOfDeclarationOnNextLine: false
+# AllowShortBlocksOnASingleLine: Empty
+# AllowShortCaseLabelsOnASingleLine: false
+# AllowShortFunctionsOnASingleLine: Empty
+# AllowShortIfStatementsOnASingleLine: Never
+# AllowShortLambdasOnASingleLine: All
+# AllowShortLoopsOnASingleLine: false
+# AlwaysBreakAfterReturnType: None
+# AlwaysBreakBeforeMultilineStrings: true
+# AlwaysBreakTemplateDeclarations: Yes
+# BinPackArguments: false
+# BinPackParameters: false
+# BreakBeforeBinaryOperators: NonAssignment
+# BreakBeforeBraces: Attach
+# BreakBeforeTernaryOperators: true
+# BreakConstructorInitializers: AfterColon
+# BreakInheritanceList: AfterColon
+# BreakStringLiterals: false
+# ColumnLimit: 80
+# CompactNamespaces: false
+# ConstructorInitializerAllOnOneLineOrOnePerLine: true
+# ConstructorInitializerIndentWidth: 4
+# ContinuationIndentWidth: 4
+# Cpp11BracedListStyle: true
+# DerivePointerAlignment: false
+# FixNamespaceComments: true
+# IncludeBlocks: Regroup
+# IncludeCategories:
+#   - Regex:           '^<ext/.*\.h>'
+#     Priority:        2
+#     SortPriority:    0
+#     CaseSensitive:   false
+#   - Regex:           '^<.*\.h>'
+#     Priority:        1
+#     SortPriority:    0
+#     CaseSensitive:   false
+#   - Regex:           '^<.*'
+#     Priority:        2
+#     SortPriority:    0
+#     CaseSensitive:   false
+#   - Regex:           '.*'
+#     Priority:        3
+#     SortPriority:    0
+#     CaseSensitive:   false
+# IncludeIsMainRegex: '([-_](test|unittest))?$'
+# IndentCaseLabels: true
+# IndentPPDirectives: BeforeHash
+# IndentWidth: 4
+# IndentWrappedFunctionNames: false
+# KeepEmptyLinesAtTheStartOfBlocks: false
+# MaxEmptyLinesToKeep: 1
+# NamespaceIndentation: None
+# PointerAlignment: Left
+# ReferenceAlignment: Left              # New in v13. int &name  ==>  int& name
+# ReflowComments: false
+# SeparateDefinitionBlocks: Always      # New in v14.
+# SortIncludes: true
+# SortUsingDeclarations: true
+# SpaceAfterCStyleCast: false
+# SpaceAfterLogicalNot: false
+# SpaceAfterTemplateKeyword: false
+# SpaceBeforeAssignmentOperators: true
+# SpaceBeforeCpp11BracedList: true
+# SpaceBeforeCtorInitializerColon: true
+# SpaceBeforeInheritanceColon: false
+# SpaceBeforeParens: ControlStatements
+# SpaceBeforeRangeBasedForLoopColon: true
+# SpaceInEmptyParentheses: false
+# SpacesBeforeTrailingComments: 2
+# SpacesInAngles: false
+# SpacesInCStyleCastParentheses: false
+# SpacesInContainerLiterals: false
+# SpacesInParentheses: false
+# SpacesInSquareBrackets: false
+# Standard: Cpp11
+# TabWidth: 4
+# UseTab: Never

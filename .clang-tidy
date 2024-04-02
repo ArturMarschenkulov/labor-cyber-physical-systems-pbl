@@ -1,0 +1,43 @@
+---
+Checks: "*,
+        -abseil-*,
+        -altera-*,
+        -android-*,
+        -fuchsia-*,
+        -google-*,
+        -llvm*,
+        -zircon-*,
+        -readability-else-after-return,
+        -readability-static-accessed-through-instance,
+        -readability-avoid-const-params-in-decls,
+        -readability-redundant-access-specifiers,
+        -cppcoreguidelines-non-private-member-variables-in-classes,
+        -cppcoreguidelines-pro-type-vararg,
+        -misc-non-private-member-variables-in-classes,
+        -misc-use-anonymous-namespace,
+        -modernize-loop-convert,
+        -bugprone-easily-swappable-parameters,
+        -readability-identifier-length,
+        -cppcoreguidelines-owning-memory
+"
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+FormatStyle:     none
+# Checks:          '-*,modernize-*'
+# WarningsAsErrors: ''
+# HeaderFilterRegex: ''
+# FormatStyle:     none
+# User:            ''
+# CheckOptions:
+#   - key:             modernize-use-trailing-return-type.CheckFollowUp
+#     value:           '0'
+#   - key:             cppcoreguidelines-avoid-magic-numbers
+#     value:           '0'
+#   - key:             modernize-loop-convert.MaxCopySize
+#     value:           '16'
+#   - key:             modernize-loop-convert.MinConfidence
+#     value:           reasonable
+#   - key:             modernize-use-nodiscard.ReasonString
+#     value:           ''
+#   - key:             modernize-use-trailing-return-type.WarnOnImplicitIntConversion
+#     value:           '0'

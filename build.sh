@@ -1,4 +1,4 @@
-IP_ADDRESS=192.168.2.111
+IP_ADDRESS=192.168.2.110
 PASSWORD=maker
 
 sh compile.sh hello_world

@@ -4,14 +4,9 @@
 
 using namespace ev3dev;
 
-
 static auto std_clamp(int32_t val, int32_t min, int32_t max) -> int32_t {
-    if (val < min) {
-        return min;
-    }
-    if (val > max) {
-        return max;
-    }
+    if (val < min) { return min; }
+    if (val > max) { return max; }
 
     return val;
 }
@@ -160,7 +155,7 @@ auto main() -> int {
     // Wait for main butclearton is pressed
 
     Robot          robot;
-    constexpr auto distance_slots_num = 7;
+    constexpr auto distance_slots_num = 5;
 
     int32_t distance_array[distance_slots_num] = {-1};
 
@@ -169,7 +164,6 @@ auto main() -> int {
         auto centimeter = robot.m_eye.distance_centimeters();
         auto angle = robot.m_head.get_angle();
         // print out
-        std::cout << "Distance: " << centimeter << " cm, Angle: " << angle << std::endl;
 
         robot.m_touch_module.update();
 
@@ -179,6 +173,21 @@ auto main() -> int {
 
         const auto MAX_HEAD_ANGLE = 90;
 
+        if (angle < -54) {
+            distance_array[0] = centimeter;
+        } else if (angle < -36) {
+            distance_array[1] = centimeter;
+        } else if (angle < -18) {
+            distance_array[2] = centimeter;
+        } else if (angle < 18) {
+            distance_array[3] = centimeter;
+        } else if (angle < 36) {
+            distance_array[4] = centimeter;
+        } else {
+            distance_array[5] = centimeter;
+        }
+
+        // head movement logic
         if (abs(angle) > MAX_HEAD_ANGLE && !robot.m_head.m_should_change_direction) {
             robot.m_head.m_should_change_direction = true;
 
@@ -199,6 +208,11 @@ auto main() -> int {
                 robot.m_touch_module.m_sensor.is_pressed();
         }
 
+        std::cout << "Distance: " << centimeter << " cm, Angle: " << angle << std::endl;
+        std::cout << "Distance array: ";
+        for (int i = 0; i < distance_slots_num; i++) {
+            std::cout << distance_array[i] << " ";
+        }
     } while (!button::enter.pressed());
     return 0;
 }

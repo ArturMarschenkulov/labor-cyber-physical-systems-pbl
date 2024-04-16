@@ -62,7 +62,7 @@ public:
         : m_head(motor(OUTPUT_D, motor::motor_medium)) {
 
         m_should_change_direction = false;
-        m_movement_speed = 30;
+        m_movement_speed = 50;
         m_movement_direction = 1;
 
         m_head.set_position(0);
@@ -208,16 +208,16 @@ auto main() -> int {
         if (abs(angle) <= MAX_HEAD_ANGLE && robot.m_head.m_should_change_direction) {
             auto curr_base_speed = robot.m_drive_module.m_base_speed;
 
-            if (angle < 0) {
-                robot.m_drive_module.set_speed_left(curr_base_speed + 10);
+            if (angle > 0) {
+                robot.m_drive_module.set_speed_left(curr_base_speed + 30);
 
                 // sleep for a few nanoseconds (nanosleep)
                 timespec ts = {0, 100000000};
                 nanosleep(&ts, nullptr);
 
-                robot.m_drive_module.set_speed_left(curr_base_speed);
+                robot.m_drive_module.set_speed_right(curr_base_speed);
             } else {
-                robot.m_drive_module.set_speed_right(curr_base_speed + 10);
+                robot.m_drive_module.set_speed_right(curr_base_speed + 30);
 
                 // sleep for a few nanoseconds (nanosleep)
                 timespec ts = {0, 100000000};

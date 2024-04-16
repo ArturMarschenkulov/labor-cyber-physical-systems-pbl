@@ -1,4 +1,5 @@
 #include "ev3dev.h"
+#include <ctime>
 #include <iostream>
 #include <algorithm>
 
@@ -19,9 +20,19 @@ public:
         : m_left_wheel(motor(OUTPUT_A, motor::motor_large))
         , m_right_wheel(motor(OUTPUT_B, motor::motor_large)) {
 
-        const uint32_t speed = 30;
-        m_left_wheel.set_duty_cycle_sp(speed);
-        m_right_wheel.set_duty_cycle_sp(speed);
+        m_base_speed = 30;
+        m_left_wheel.set_duty_cycle_sp(m_base_speed);
+        m_right_wheel.set_duty_cycle_sp(m_base_speed);
+    }
+
+    auto set_speed_left(int32_t speed) -> void {
+        int32_t s = std_clamp(speed, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED);
+        m_left_wheel.set_duty_cycle_sp(s);
+    }
+
+    auto set_speed_right(int32_t speed) -> void {
+        int32_t s = std_clamp(speed, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED);
+        m_right_wheel.set_duty_cycle_sp(s);
     }
 
     auto set_speed(int32_t speed) -> void {
@@ -40,8 +51,9 @@ public:
         m_right_wheel.stop();
     }
 
-    motor m_left_wheel;
-    motor m_right_wheel;
+    motor    m_left_wheel;
+    motor    m_right_wheel;
+    uint32_t m_base_speed;
 };
 
 struct HeadModule {
@@ -194,6 +206,25 @@ auto main() -> int {
             robot.m_head.switch_head_movement();
         }
         if (abs(angle) <= MAX_HEAD_ANGLE && robot.m_head.m_should_change_direction) {
+            auto curr_base_speed = robot.m_drive_module.m_base_speed;
+
+            if (angle < 0) {
+                robot.m_drive_module.set_speed_left(curr_base_speed + 10);
+
+                // sleep for a few nanoseconds (nanosleep)
+                timespec ts = {0, 100000000};
+                nanosleep(&ts, nullptr);
+
+                robot.m_drive_module.set_speed_left(curr_base_speed);
+            } else {
+                robot.m_drive_module.set_speed_right(curr_base_speed + 10);
+
+                // sleep for a few nanoseconds (nanosleep)
+                timespec ts = {0, 100000000};
+                nanosleep(&ts, nullptr);
+
+                robot.m_drive_module.set_speed_right(curr_base_speed);
+            }
             robot.m_head.m_should_change_direction = false;
             last_min_distance = 100000;
         }

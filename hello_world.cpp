@@ -4,6 +4,18 @@
 
 using namespace ev3dev;
 
+
+static auto std_clamp(int32_t val, int32_t min, int32_t max) -> int32_t {
+    if (val < min) {
+        return min;
+    }
+    if (val > max) {
+        return max;
+    }
+
+    return val;
+}
+
 struct DriveModule {
 public:
     static constexpr int32_t MAX_MOTOR_SPEED = 100;
@@ -18,7 +30,7 @@ public:
     }
 
     auto set_speed(int32_t speed) -> void {
-        int32_t s = std::clamp(speed, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED);
+        int32_t s = std_clamp(speed, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED);
         m_left_wheel.set_duty_cycle_sp(s);
         m_right_wheel.set_duty_cycle_sp(s);
     }
@@ -122,7 +134,7 @@ struct Robot {
     }
 
     auto set_drive_speed(int32_t speed) -> void {
-        int32_t s = std::clamp(speed, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED);
+        int32_t s = std_clamp(speed, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED);
         m_drive_module.set_speed(s);
     }
 

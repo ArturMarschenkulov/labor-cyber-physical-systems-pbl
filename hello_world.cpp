@@ -50,7 +50,7 @@ public:
         : m_head(motor(OUTPUT_D, motor::motor_medium)) {
 
         m_should_change_direction = false;
-        m_movement_speed = 100;
+        m_movement_speed = 30;
         m_movement_direction = 1;
 
         m_head.set_position(0);
@@ -74,6 +74,7 @@ public:
     bool m_should_change_direction;
     int  m_movement_speed;
     int  m_movement_direction; // -1 left, 1 right
+    bool m_is_head_movement_done = false;
 };
 
 struct TouchModule {
@@ -150,6 +151,7 @@ struct Robot {
 };
 
 auto main() -> int {
+
     std::cout << "Hello CPS Course." << std::endl;
     std::cout << "Press main button to leave ..." << std::endl;
     // Wait for main butclearton is pressed
@@ -157,35 +159,33 @@ auto main() -> int {
     Robot          robot;
     constexpr auto distance_slots_num = 5;
 
-    int32_t distance_array[distance_slots_num] = {-1};
+    int last_min_distance = 100000;
+    // int curr_min_distance = last_min_distance;
+    int angle_for_min_distance = 0;
 
     do {
 
-        auto centimeter = robot.m_eye.distance_centimeters();
+        auto distance_in_cm = robot.m_eye.distance_centimeters();
         auto angle = robot.m_head.get_angle();
+
+        if (distance_in_cm < last_min_distance) {
+            last_min_distance = distance_in_cm;
+            angle_for_min_distance = angle;
+        }
+
+        std::cout << "dist: " << distance_in_cm << " cm, Angle: " << angle
+                  << " min dist: " << last_min_distance
+                  << " angle: " << angle_for_min_distance << std::endl;
+
         // print out
 
         robot.m_touch_module.update();
 
-        robot.set_drive_speed(centimeter);
+        robot.set_drive_speed(distance_in_cm);
 
         robot.m_head.move();
 
         const auto MAX_HEAD_ANGLE = 90;
-
-        if (angle < -54) {
-            distance_array[0] = centimeter;
-        } else if (angle < -36) {
-            distance_array[1] = centimeter;
-        } else if (angle < -18) {
-            distance_array[2] = centimeter;
-        } else if (angle < 18) {
-            distance_array[3] = centimeter;
-        } else if (angle < 36) {
-            distance_array[4] = centimeter;
-        } else {
-            distance_array[5] = centimeter;
-        }
 
         // head movement logic
         if (abs(angle) > MAX_HEAD_ANGLE && !robot.m_head.m_should_change_direction) {
@@ -195,6 +195,7 @@ auto main() -> int {
         }
         if (abs(angle) <= MAX_HEAD_ANGLE && robot.m_head.m_should_change_direction) {
             robot.m_head.m_should_change_direction = false;
+            last_min_distance = 100000;
         }
 
         if (robot.m_touch_module.m_is_on && robot.m_eye.distance_centimeters() > 20) {
@@ -208,11 +209,8 @@ auto main() -> int {
                 robot.m_touch_module.m_sensor.is_pressed();
         }
 
-        std::cout << "Distance: " << centimeter << " cm, Angle: " << angle << std::endl;
-        std::cout << "Distance array: ";
-        for (int i = 0; i < distance_slots_num; i++) {
-            std::cout << distance_array[i] << " ";
-        }
     } while (!button::enter.pressed());
+
+    std::cout << "Program ended" << std::endl;
     return 0;
 }

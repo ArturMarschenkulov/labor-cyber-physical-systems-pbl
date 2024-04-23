@@ -170,11 +170,22 @@ auto main() -> int {
 
     Robot          robot;
     constexpr auto distance_slots_num = 5;
+    constexpr auto MIN_DISTANCE = 10;
+    constexpr auto MAX_DISTANCE = 200;
+    constexpr auto MAX_SECS_OF_ROTATING = 5;
 
     int last_min_distance = 100000;
     // int curr_min_distance = last_min_distance;
     int angle_for_min_distance = 0;
 
+    enum class STATE {
+        PERFECT,
+        TOO_FAR,
+        TOO_CLOSE
+    };
+    STATE state = STATE::PERFECT;
+
+    bool is_timing_on = false;
     do {
 
         auto distance_in_cm = robot.m_eye.distance_centimeters();
@@ -183,6 +194,14 @@ auto main() -> int {
         if (distance_in_cm < last_min_distance) {
             last_min_distance = distance_in_cm;
             angle_for_min_distance = angle;
+        }
+
+        if (last_min_distance > MAX_DISTANCE) {
+            state = STATE::TOO_FAR;
+        } else if (last_min_distance < MIN_DISTANCE) {
+            state = STATE::TOO_CLOSE;
+        } else {
+            state = STATE::PERFECT;
         }
 
         std::cout << "dist: " << distance_in_cm << " cm, Angle: " << angle
@@ -207,14 +226,26 @@ auto main() -> int {
         }
         if (abs(angle) <= MAX_HEAD_ANGLE && robot.m_head.m_should_change_direction) {
             auto curr_base_speed = robot.m_drive_module.m_base_speed;
+            switch (state) {
+                case STATE::PERFECT: {
 
-            if (angle_for_min_distance > 0) {
-                robot.m_drive_module.set_speed_right(curr_base_speed);
-                robot.m_drive_module.set_speed_left(curr_base_speed + 30);
+                    if (angle_for_min_distance > 0) {
+                        robot.m_drive_module.set_speed_right(curr_base_speed);
+                        robot.m_drive_module.set_speed_left(curr_base_speed + 40);
 
-            } else {
-                robot.m_drive_module.set_speed_left(curr_base_speed);
-                robot.m_drive_module.set_speed_right(curr_base_speed + 30);
+                    } else {
+                        robot.m_drive_module.set_speed_left(curr_base_speed);
+                        robot.m_drive_module.set_speed_right(curr_base_speed + 40);
+                    }
+                } break;
+                case STATE::TOO_CLOSE: {
+                    robot.m_drive_module.set_speed_right(0);
+                    robot.m_drive_module.set_speed_left(0);
+                } break;
+                case STATE::TOO_FAR: {
+                    robot.m_drive_module.set_speed_right(70);
+                    robot.m_drive_module.set_speed_left(-70);
+                } break;
             }
             robot.m_head.m_should_change_direction = false;
             last_min_distance = 100000;

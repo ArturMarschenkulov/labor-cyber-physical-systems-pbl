@@ -193,7 +193,7 @@ auto main() -> int {
 
         robot.m_touch_module.update();
 
-        robot.set_drive_speed(distance_in_cm);
+        // robot.set_drive_speed(distance_in_cm);
 
         robot.m_head.move();
 
@@ -208,22 +208,13 @@ auto main() -> int {
         if (abs(angle) <= MAX_HEAD_ANGLE && robot.m_head.m_should_change_direction) {
             auto curr_base_speed = robot.m_drive_module.m_base_speed;
 
-            if (angle > 0) {
+            if (angle_for_min_distance > 0) {
+                robot.m_drive_module.set_speed_right(curr_base_speed);
                 robot.m_drive_module.set_speed_left(curr_base_speed + 30);
 
-                // sleep for a few nanoseconds (nanosleep)
-                timespec ts = {0, 100000000};
-                nanosleep(&ts, nullptr);
-
-                robot.m_drive_module.set_speed_right(curr_base_speed);
             } else {
+                robot.m_drive_module.set_speed_left(curr_base_speed);
                 robot.m_drive_module.set_speed_right(curr_base_speed + 30);
-
-                // sleep for a few nanoseconds (nanosleep)
-                timespec ts = {0, 100000000};
-                nanosleep(&ts, nullptr);
-
-                robot.m_drive_module.set_speed_right(curr_base_speed);
             }
             robot.m_head.m_should_change_direction = false;
             last_min_distance = 100000;
